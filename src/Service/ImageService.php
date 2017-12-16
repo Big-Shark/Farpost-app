@@ -2,13 +2,19 @@
 
 namespace App\Service;
 
+use App\Component\Db;
+
 class ImageService {
 
-    public function getImage($uid) {
-        $db = Db::getConnection();
+    protected $db;
+    function __construct(Db $db)
+    {
+        $this->db = $db;
+    }
 
+    public function getImage($uid) {
         $sql = "SELECT id, img, uid, date FROM image WHERE uid = :uid";
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
 
         $result->bindParam('uid', $uid, PDO::PARAM_STR);
         $result->execute();
@@ -17,10 +23,9 @@ class ImageService {
     }
 
     public function showImage($id) {
-        $db = Db::getConnection();
 
         $sql = "SELECT img FROM image WHERE id = :id";
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
 
         $result->bindParam('id', $id, PDO::PARAM_STR);
         $result->execute();
@@ -40,8 +45,6 @@ class ImageService {
     }
 
     public function insertImage($uid) {
-        $db = Db::getConnection();
-
         $file = $_FILES['file'];
         $uploaddir = dirname($_SERVER['SCRIPT_FILENAME']) . "/UploadedFiles/";
 
@@ -68,7 +71,7 @@ class ImageService {
         if (move_uploaded_file($file['tmp_name'], $uploaddir . $uploadfile)) {
 
             $sql = "INSERT INTO image (img, uid) VALUES (:img, :uid) RETURNING id, img";
-            $result = $db->prepare($sql);
+            $result = $this->db->prepare($sql);
 
             $result->bindParam('img', $uploadfile, PDO::PARAM_STR);
             $result->bindParam('uid', $uid, PDO::PARAM_STR);

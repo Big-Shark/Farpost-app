@@ -19,4 +19,7 @@ return [
     \App\Service\UserService::class => function($c) {
         return new \App\Service\UserService($c->get(\App\Component\Db::class));
     },
+    \App\Service\ImageService::class => function($c) {
+        return new \App\Service\ImageService($c->get(\App\Component\Db::class));
+    },
 ];

@@ -33,7 +33,7 @@ class UserService {
 
     public function login($password, $email) {
         $sql = "SELECT id FROM users WHERE email = :email AND password = :password";
-        $result = $this->prepare($sql);
+        $result = $this->db->prepare($sql);
 
         $result->bindParam('email', $email, PDO::PARAM_STR);
         $result->bindParam('password', $password, PDO::PARAM_STR);
